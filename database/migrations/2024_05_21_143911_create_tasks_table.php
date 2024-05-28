@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->text('comment')->nullable();
-            $table->enum('status',['Completed', 'On-Hold', 'Cancelled', 'In Progress'])->default('In Progress');
+            $table->foreignIdFor(\App\Models\User::class)->constrained();
+            $table->string('status')->default(\App\Enums\TaskStatusEnum::Progressing->value);
+            $table->string('priority')->default(\App\Enums\TaskPpriorityEnum::Low->value);
             $table->timestamp('deadline_at')->nullable();
             $table->timestamp('reminder_at')->nullable();
             $table->timestamps();

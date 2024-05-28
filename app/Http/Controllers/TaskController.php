@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 
 class TaskController extends Controller
 {
+//    public function __construct()
+//    {
+//        Route::middleware('auth:sanctum')->only(['store', 'update', 'destroy']);
+//    }
     /**
      * Display a listing of the resource.
      */
@@ -33,11 +38,13 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $attribute = $request->validate([
-            'name'         => ['required', 'string', 'unique:tasks', 'min:2', 'max:255'],
-            'comment'      => ['nullable', 'string', 'max:255'],
-            'status'       => ['required', 'in:Completed,On-Hold,Cancelled,In Progress'],
-            'deadline_at' => ['nullable', 'sometimes', 'date'],
-            'reminder_at' => ['nullable', 'sometimes', 'date'],
+            'title'         => ['required', 'string', 'unique:tasks', 'min:2', 'max:255'],
+            'comment'       => ['nullable', 'string', 'max:255'],
+            'deadline_at'   => ['nullable', 'sometimes', 'date'],
+            'reminder_at'   => ['nullable', 'sometimes', 'date'],
+        ], [
+            'title.unique'  => 'the task is already listed',
+
         ]);
 
         $task = Task::create($attribute);
@@ -67,9 +74,8 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $request->validate([
-            'name' => 'nullable|string|min:2|max:255',
-            'comment' => 'nullable|string|max:255',
-            'status' => 'nullable|in:Completed,On-Hold,Cancelled,In Progress',
+            'title'      => 'required|string|min:2|max:255',
+            'comment'   => 'nullable|string|max:255',
             'deadline_at' => 'nullable|sometimes|date',
             'reminder_at' => 'nullable|sometimes|date'
         ]);
@@ -89,4 +95,5 @@ class TaskController extends Controller
 
         return Response::json($task)->setStatusCode(204);
     }
+
 }

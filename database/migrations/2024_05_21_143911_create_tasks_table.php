@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('comment')->nullable();
+            $table->string('task_title');
+            $table->text('task_description')->nullable();
             $table->foreignIdFor(\App\Models\User::class)->constrained();
             $table->string('status')->default(\App\Enums\TaskStatusEnum::Progressing->value);
             $table->string('priority')->default(\App\Enums\TaskPpriorityEnum::Low->value);

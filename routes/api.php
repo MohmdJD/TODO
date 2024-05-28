@@ -47,4 +47,5 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('tasks', TaskController::class);
+Route::apiResource('tasks', TaskController::class)->only(['store','update','destroy'])->middleware('auth:sanctum');
+Route::apiResource('tasks', TaskController::class)->except(['store','update','destroy']);

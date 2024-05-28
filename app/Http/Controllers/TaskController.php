@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 
@@ -38,16 +39,17 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $attribute = $request->validate([
-            'title'         => ['required', 'string', 'unique:tasks', 'min:2', 'max:255'],
-            'comment'       => ['nullable', 'string', 'max:255'],
+            'task_title'         => ['required', 'string', 'unique:tasks', 'min:2', 'max:255'],
+            'task_description'       => ['nullable', 'string', 'max:255'],
             'deadline_at'   => ['nullable', 'sometimes', 'date'],
             'reminder_at'   => ['nullable', 'sometimes', 'date'],
         ], [
-            'title.unique'  => 'the task is already listed',
+            'task_title.unique'  => 'the task is already listed',
 
         ]);
 
-        $task = Task::create($attribute);
+
+        $task = Auth::user()->task()->create($attribute);
 
         return Response::json($task)->setStatusCode(201);
     }
@@ -74,8 +76,8 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $request->validate([
-            'title'      => 'required|string|min:2|max:255',
-            'comment'   => 'nullable|string|max:255',
+            'task_title'      => 'required|string|min:2|max:255',
+            'task_description'   => 'nullable|string|max:255',
             'deadline_at' => 'nullable|sometimes|date',
             'reminder_at' => 'nullable|sometimes|date'
         ]);
